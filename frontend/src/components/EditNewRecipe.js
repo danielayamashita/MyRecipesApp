@@ -1,21 +1,34 @@
 import { useState, useEffect} from "react";
-import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
+
+const api_url = "http://127.0.0.1:8000/api";
+
+
+const saveRecipe = async (recipeData) => {
+
+  try {
+    console.log("Save Recipe clicked");
+    const response = await fetch(`${api_url}/recipes/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(recipeData),
+    });
+
+    const data = await response.json();
+    console.log("Saved:", data);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
 
 
 const EditNewRecipe = () => {
 
-    const [recipes, setRecipes] = useState([]);
+    const [recipe, setRecipe] = useState([]);
     const [query, setQuery] = useState("");
 
-
-        /*useEffect(() => {
-            console.log("Fetching message from backend...");
-            fetch("http://127.0.0.1:8000/api/recipe_marmiton/?q=chocolate")
-            .then(response => response.json())
-            .then(data => setRecipes(data.message))
-            .catch(error => console.error(error));
-        }, []);*/
 
     const updateQuery = (query) => {
         setQuery(query);   
@@ -28,14 +41,14 @@ const EditNewRecipe = () => {
     console.log("searchRecipes:", query);
 
     const response = await fetch(
-      `http://127.0.0.1:8000/api/recipe_marmiton/?q=${query}`
+      `${api_url}/recipe_marmiton/?q=${query}`
     );
 
     const data = await response.json();
 
     console.log("API data:", data);
 
-    setRecipes(data); 
+    setRecipe(data); 
   } catch (error) {
     console.error("Error fetching recipes:", error);
   }
@@ -63,21 +76,31 @@ const EditNewRecipe = () => {
                         
                     </div>
                     <div>
-                        <h1>{recipes.name}</h1>
-                        <h2>Ingredients:</h2>
+                        <h1>{recipe.title}</h1>
+                        {recipe.ingredients && recipe.ingredients.length > 0 && (
+                            <h2>Ingredients:</h2>
+                        )
+                        }
+                        
                         <ul>
-                            {recipes.ingredients && recipes.ingredients.map((ingredient, index) => (
+                            {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
                                 <li key={index}>{ingredient}</li>
                             ))}
                         </ul>
 
-                        <h2>Steps:</h2>
+                        {recipe.steps && recipe.steps.length > 0 && (
+                            <h2>Steps:</h2>
+                        )
+                        }
+
                         <ul>
-                            {recipes.steps && recipes.steps.map((step, index) => (
+                            {recipe.steps && recipe.steps.map((step, index) => (
                                 <li key={index}>{step}</li>
                             ))}
                         </ul>
                     </div>
+
+                    <button onClick={() => saveRecipe(recipe)}>Save Recipe</button>
 
                 </div>
             </div>

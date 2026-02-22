@@ -45,6 +45,13 @@ body,
   flex: 1;
 }
 
+.recipe-top {
+  position: relative;
+  height: 200px;
+  display: flex;
+  align-items: flex-end;
+}
+
 
 .open-search {
   position: fixed;

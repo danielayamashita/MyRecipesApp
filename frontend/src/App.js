@@ -6,9 +6,6 @@ import EditNewRecipe from "./components/EditNewRecipe";
 
 function App() {
 
-    
-
-
      return (
     
     <div className="app">

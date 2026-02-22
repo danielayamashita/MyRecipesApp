@@ -5,7 +5,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import requests
 from bs4 import BeautifulSoup
-
+from rest_framework import status
+from .serializers import RecipeSerializer
+from .models import Recipe
 
 
 
@@ -18,8 +20,6 @@ def recipe_marmiton(request):
 
     print("Query:", url)
 
-        # URL to scrape
-    #url = "https://www.marmiton.org/recettes/recette_pate-a-crepes-des-plus-raffinees_49665.aspx"
 
     # Fetch HTML
     response = requests.get(url)
@@ -43,14 +43,37 @@ def recipe_marmiton(request):
         steps = soup.find_all("div", class_="recipe-step-list__container")
 
 
-
-
     else:
         print("Failed to fetch page")
 
     return Response({
-        "name": title[0].text.strip() if title else "No title found",
+        "title": title[0].text.strip() if title else "No title found",
         "url": url,
         "ingredients": [" ".join(i.text.split()) for i in ingredients],
         "steps": [" ".join(s.text.split()) for s in steps]
     })
+
+
+
+
+@api_view(['POST'])
+def save_recipe(request):
+    print("Received data:", request.data)
+    serializer = RecipeSerializer(data=request.data)
+
+    if serializer.is_valid():
+        print("is_valid")
+        serializer.save()  # Saves to database
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+        
+
+    print("Errors:", serializer.errors)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_all_recipes(request):
+    recipes = Recipe.objects.all()   # Query database
+    serializer = RecipeSerializer(recipes, many=True)
+    return Response(serializer.data)

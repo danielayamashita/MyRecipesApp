@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 import myImage from "../images/feijoada.jpg";
 
-const Recipe = () => {
+const Recipe = ({ recipe }) => {
 
     return (<div className="recipe" >
-          <div className="book-top">
+          <div className="recipe-top">
             <div
               className="recipe-cover"
               style={{
@@ -18,7 +18,7 @@ const Recipe = () => {
             ></div>
     
           </div>
-          <div className="recipe-title">Feijoada</div>
+          <div className="recipe-title">{recipe.title}</div>
         </div>);
 
 
