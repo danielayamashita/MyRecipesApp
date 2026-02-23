@@ -1,62 +1,26 @@
 import { useState, useEffect} from "react";
 import {Link} from "react-router-dom";
-
-const api_url = "http://127.0.0.1:8000/api";
-
-
-const saveRecipe = async (recipeData) => {
-
-  try {
-    console.log("Save Recipe clicked");
-    const response = await fetch(`${api_url}/recipes/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(recipeData),
-    });
-
-    const data = await response.json();
-    console.log("Saved:", data);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
+import * as RecipeAPI from "../api/RecipeAPI";
 
 
 const EditNewRecipe = () => {
 
-    const [recipe, setRecipe] = useState([]);
-    const [query, setQuery] = useState("");
+  const [recipe, setRecipe] = useState([]);
+  const [query, setQuery] = useState("");
 
-
-    const updateQuery = (query) => {
-        setQuery(query);   
-        console.log("Query:",query);  
+  const getRecipe = async (query) => {
+      const res = await RecipeAPI.searchRecipe(query);
+      setRecipe(res);
     };
 
 
-    const searchRecipes = async () => {
-  try {
-    console.log("searchRecipes:", query);
-
-    const response = await fetch(
-      `${api_url}/recipe_marmiton/?q=${query}`
-    );
-
-    const data = await response.json();
-
-    console.log("API data:", data);
-
-    setRecipe(data); 
-  } catch (error) {
-    console.error("Error fetching recipes:", error);
-  }
-};
+  const updateQuery = (query) => {
+      setQuery(query);   
+      console.log("Query:",query);  
+  };
 
 
     return (<div >
-                
                 <div className="search-recipes">
                     <div className="search-recipes-bar">
                         <Link className="close-search" to="/">
@@ -71,9 +35,8 @@ const EditNewRecipe = () => {
                             onChange={(event) => updateQuery(event.target.value)}
                         />
                         </div>
-                        <button onClick={searchRecipes}>Search</button>
-
-                        
+                        <button onClick={() => getRecipe(query)}>Search</button>
+                                              
                     </div>
                     <div>
                         <h1>{recipe.title}</h1>
@@ -100,7 +63,7 @@ const EditNewRecipe = () => {
                         </ul>
                     </div>
 
-                    <button onClick={() => saveRecipe(recipe)}>Save Recipe</button>
+                    <button onClick={() => RecipeAPI.saveRecipe(recipe)}>Save Recipe</button>
 
                 </div>
             </div>

@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import myImage from "../images/feijoada.jpg";
+import RecipeEdit from "./RecipeEdit";
 
 const Recipe = ({ recipe }) => {
 
@@ -16,6 +17,9 @@ const Recipe = ({ recipe }) => {
                 backgroundRepeat: "no-repeat",
               }}
             ></div>
+
+            <RecipeEdit recipe={recipe} />
+
     
           </div>
           <div className="recipe-title">{recipe.title}</div>
