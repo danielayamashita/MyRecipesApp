@@ -1,9 +1,12 @@
 import { useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import * as RecipeAPI from "../api/RecipeAPI";
+import { useNavigate } from "react-router-dom";
 
 
 const EditNewRecipe = () => {
+
+    const navigate = useNavigate();
 
   const [recipe, setRecipe] = useState([]);
   const [query, setQuery] = useState("");
@@ -40,6 +43,15 @@ const EditNewRecipe = () => {
                     </div>
                     <div>
                         <h1>{recipe.title}</h1>
+
+                        {recipe.image_url && (
+                            <img src={recipe.image_url} alt="Recipe" className="recipe-image" 
+                            style={{
+                                width: 200,
+                                height: 200,
+                            }}
+                            />
+                        )}
                         {recipe.ingredients && recipe.ingredients.length > 0 && (
                             <h2>Ingredients:</h2>
                         )
@@ -63,8 +75,13 @@ const EditNewRecipe = () => {
                         </ul>
                     </div>
 
-                    <button onClick={() => RecipeAPI.saveRecipe(recipe)}>Save Recipe</button>
-
+                    <button  onClick={async () => {
+                        await RecipeAPI.saveRecipe(recipe);
+                        navigate("/");
+                    }}>
+                        Save Recipe
+                    </button>
+                   
                 </div>
             </div>
     

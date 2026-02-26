@@ -1,24 +1,21 @@
-import PropTypes from "prop-types";
+
 import myImage from "../images/feijoada.jpg";
 import RecipeEdit from "./RecipeEdit";
 
-const Recipe = ({ recipe }) => {
+const Recipe = ({ recipe,handleOptionChange}) => {
 
     return (<div className="recipe" >
           <div className="recipe-top">
-            <div
+            <img
+            src={recipe.image}
               className="recipe-cover"
               style={{
                 width: 150,
                 height: 150,
-                backgroundImage: `url(${myImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
               }}
-            ></div>
+            />
 
-            <RecipeEdit recipe={recipe} />
+            <RecipeEdit recipe={recipe} handleOptionChange={handleOptionChange}/>
 
     
           </div>
